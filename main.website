@@ -1,0 +1,152 @@
+from http.server import SimpleHTTPRequestHandler
+from socketserver import TCPServer
+
+# Define the HTML content for the "About Me" website with a modern startup-style design
+html_content = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Me - Mariia Kovalenko</title>
+    <style>
+        /* Reset & General Styling */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f7fa; color: #333; line-height: 1.6; }
+
+        /* Sidebar Navigation */
+        nav { position: fixed; top: 0; left: 0; width: 220px; height: 100%; background: #1f1f2e; padding: 2rem 1rem; display: flex; flex-direction: column; align-items: start; }
+        nav h2 { color: #ffffff; font-size: 1.5rem; margin-bottom: 1.5rem; }
+        nav ul { list-style-type: none; width: 100%; }
+        nav ul li { margin: 1rem 0; }
+        nav ul li a { color: #a9a9c1; text-decoration: none; font-size: 1rem; transition: color 0.3s; }
+        nav ul li a:hover { color: #ffffff; }
+
+        /* Main Content Area */
+        main { margin-left: 250px; padding: 2rem; }
+        header { background: linear-gradient(135deg, #6a11cb, #2575fc); color: #ffffff; padding: 2rem; text-align: center; border-radius: 10px; }
+        header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        header p { font-size: 1.2rem; font-style: italic; color: #ffffff; } /* Set header text to white */
+
+        /* Contact Links */
+        .contact-links { margin-top: 1rem; }
+        .contact-links a { color: #ffffff; text-decoration: none; margin: 0 0.5rem; font-size: 1rem; transition: color 0.3s; }
+        .contact-links a:hover { text-decoration: underline; }
+
+        /* Section Styling */
+        section { margin-bottom: 2rem; padding: 2rem; background: #ffffff; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h2 { color: #2575fc; font-size: 1.8rem; margin-bottom: 1rem; }
+        p, li { color: #555; }
+        section h2:after { content: ""; display: block; width: 50px; height: 3px; background: #2575fc; margin-top: 0.5rem; }
+
+        /* Footer */
+        footer { text-align: center; padding: 1rem 0; background: #333; color: #fff; margin-top: 2rem; border-radius: 10px; }
+        footer p { font-size: 0.9rem; }
+
+        /* Smooth Scroll */
+        html { scroll-behavior: smooth; }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <nav>
+        <h2>Mariia Kovalenko</h2>
+        <ul>
+            <li><a href="#about">About Me</a></li>
+            <li><a href="#education">Education</a></li>
+            <li><a href="#experience">Experience</a></li>
+            <li><a href="#certifications">Certifications</a></li>
+            <li><a href="#activities">Extracurriculars</a></li>
+            <li><a href="#additional_experiences">Additional Experiences</a></li>
+            <li><a href="#languages">Languages</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <header>
+            <h1>Hello, I'm Mariia Kovalenko</h1>
+            <p>Student in New Orleans | Political Science, Computer Science, Philosophy, Sociology</p>
+            <div class="contact-links">
+                <a href="mailto:mariiakovalenko123@gmail.com">Email</a> | 
+                <a href="https://www.linkedin.com/in/mariia-kovalenko-b3a60328a/" target="_blank">LinkedIn</a>
+            </div>
+        </header>
+
+        <section id="about">
+            <h2>About Me</h2>
+            <p>I'm currently a student studying in New Orleans, originally from New York City. Recently, I've been involved in AI projects, academic research, and advocacy for dignity and social justice.</p>
+            <p>One of my recent projects, "ReStore Revenue Enhancement," aims to optimize product sales for Habitat for Humanity's ReStore in New Orleans by using AI to improve product categorization and online visibility.</p>
+        </section>
+
+        <section id="education">
+            <h2>Education</h2>
+            <ul>
+                <li><strong>Tulane University, New Orleans</strong> - Bachelor's Degree: Political Science, Computer Science, Philosophy, Sociology (Expected 05/2026)</li>
+                <li><strong>Bard Early College High School, Manhattan</strong> - Associate's Degree (Completed 06/2024)</li>
+            </ul>
+        </section>
+
+        <section id="experience">
+            <h2>Experience</h2>
+            <ul>
+                <li><strong>Research Assistant, Tulane Economics Department</strong> (09/2024 - Current)<br>Data analysis, version control, statistical support for economic research.</li>
+                <li><strong>Intern, NYC Department of Housing and Preservation</strong> (06/2024 - 08/2024)<br>Team leader for accessibility-focused national housing survey.</li>
+                <li><strong>Counselor, Judea Sprout Summer Camp</strong> (01/2022 - 01/2023)<br>Oversaw children's activities and ensured safety protocols.</li>
+                <li><strong>Sales Associate, Pure Green</strong> (01/2020 - 01/2021)<br>Customer engagement, product management, and inventory tasks.</li>
+            </ul>
+        </section>
+
+        <section id="certifications">
+            <h2>Certifications</h2>
+            <p>Certified in Social and Behavioral Responsible Conduct of Research</p>
+        </section>
+
+        <section id="activities">
+            <h2>Extracurricular Activities</h2>
+            <ul>
+                <li>Phi Alpha Delta Pre-Law Society</li>
+                <li>Fundraising for Strong City Non-Profit</li>
+                <li>Event Planner - Kappa Alpha Theta</li>
+                <li>Women's Ultimate Frisbee</li>
+            </ul>
+        </section>
+
+        <section id="additional_experiences">
+            <h2>Additional Experiences</h2>
+            <ul>
+                <li>Rome Language & Culture Study Abroad (2022)</li>
+                <li>DCTV NYC Filmmaking Fellowship (2020-2021) - Produced a short film on COVID-19 and BLM in NYC.</li>
+            </ul>
+        </section>
+
+        <section id="languages">
+            <h2>Languages</h2>
+            <p>Ukrainian (native), Russian (native)</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Mariia Kovalenko. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
+"""
+
+
+# Set up a simple server to serve the HTML content
+class MyHandler(SimpleHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header("Content-type", "text/html")
+        self.end_headers()
+        self.wfile.write(html_content.encode("utf-8"))
+
+
+# Run the server on port 8000
+PORT = 8000
+with TCPServer(("", PORT), MyHandler) as httpd:
+    print(f"Serving at http://localhost:{PORT}")
+    httpd.serve_forever()
